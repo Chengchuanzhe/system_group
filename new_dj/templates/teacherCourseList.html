@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>teacher</title>
+    {% load static %}
+    <link href="{% static 'css/teacherCourseList.css' %}" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js"></script>
+<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="{% static 'js/xlsx.mini.js' %}"></script>
+    <script src="{% static 'js/teacherCourse.js' %}"></script>
+</head>
+<body>
+
+<div class="container">
+    <!-- 欢迎语句和注销 -->
+    <div class="jumbotron">
+    <h1>Hello!Teacher!</h1>
+    <a href="{% url 'logout' %}" id="logout"> 注销</a>
+            {# 如果是管理员，则打开管理员的入口#}
+            {% if isManager %}
+                <a href="{% url 'manager' %}" id="managerMode">进入管理员模式</a>
+            {% endif %}
+    </div>
+
+    <div class="courseList-div well">
+
+        {% if course is not null %}
+            <p>目前你开设了以下课程，点击进入课程页面</p>
+            <div class="list-group">
+            {% for courseItem, taskNumber in course %}
+                <a href="{% url 'teacherGetTask' courseItem.courseNumber courseItem.courseName %}" class="list-group-item active">{{ courseItem.courseName }}&emsp;<span class="badge">{{ taskNumber }}</span></a><p></p>
+            {% endfor %}
+            </div>
+        {% endif %}
+        {% if course is  null %}
+            <p>目前你没有开设课程，请添加课程！</p>
+        {% endif %}
+
+        <div class="addCourse-div">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg-courseAdd"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&emsp;添加课程</button>
+        </div>
+
+    </div>
+
+            <div class="modal fade bs-example-modal-lg-courseAdd" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <h1>添加课程</h1>
+                    <form action="/addCourse/" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="addHomeworkTitle">课程名(如:"C语言程序设计")</label>
+                            <input class="form-control" type="text" name="courseName" id="addCourseName" />
+                        </div>
+                        <div class="form-group">
+                            <label for="addHomeworkContent">课程编号(建议命名为:"202001、202002")</label>
+                            <input class="form-control" type="text" name="courseNumber" id="addCourseNumber" />
+
+                        </div>
+                        <div class="form-group">
+                            <label for="addHomeworkUploadFileType">学生名单(xlsx表格)</label>
+
+                            <input type="file" value="上传excel文件" id="studentExcelUpload" accept=".xlsx"/>
+
+                            <input class="form-control" type="text" name="studentList" id="addCourseStudentList" />
+                            <span class="help-block">ps:导入的表格中每行的第一、二、三个单元格分别为学号、姓名、性别</span>
+                            <span class="help-block">请确保输入框中的格式为"学号,姓名,性别;" 例如:"2018222000,张三,男;"</span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary" value="提交">
+                        </div>
+
+                    </form>
+                </div>
+              </div>
+            </div>
+
+</div>
+
+</body>
+</html>

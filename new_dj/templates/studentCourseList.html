@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Student</title>
+    {% load static %}
+    <link href="{% static 'css/studentCourseList.css' %}" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js"></script>
+<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<div class="container">
+    <!-- 欢迎语句和注销 -->
+    <div class="jumbotron">
+    <h1>Hello!Student!</h1>
+    <a href="{% url 'logout' %}" id="logout"> 注销</a>
+    </div>
+
+    <div class="courseList-div well">
+
+        {% if course is not null %}
+            <p>目前你选择了以下课程，点击进入课程页面</p>
+            <div class="list-group">
+            {% for courseItem, taskNumber in course %}
+                <a href="{% url 'studentGetTask' courseItem.courseNumber courseItem.courseName %}" class="list-group-item active">{{ courseItem.courseName }}&emsp;<span class="badge">{{ taskNumber }}</span></a>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% if course is  null %}
+            <p>目前你没有选择课程，请联系老师导入名单！</p>
+        {% endif %}
+
+    </div>
+
+</div>
+</body>
+
+
+</html>
